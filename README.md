@@ -1,52 +1,30 @@
-PHP Cross Domain (AJAX) Proxy
-==============
+# Guide4You AJAX proxy
 
-An application proxy that can be used to transparently transfer all kind of requests ( including of course XMLHTTPRequest ) to any third part domain. It is possible to define a list of acceptable third party domains and you are encouraged to do so. Otherwise the proxy is open to any kind of requests.
+In short *Guide4You AJAX Proxy* is an AJAX proxy modified to fit the needs of
+the *Guide4You* web application and requires PHP 5.3 or later.
 
-If it is possible to enable CORS on your application server, this proxy is not necessary. Have a look at [how you can enable CORS on your server](http://enable-cors.org/server.html) for further information.
+You want or need more details? Here you go: 
 
-PHP 5.3+
-
-Installation
---------------
-
-The proxy is indentionally limited to a single file. All you have to do is to place `proxy.php` under your application
-
-Whenever you want to make a cross domain request, just make a request to http://www.yourdomain.com/proxy.php and specify the cross domain URL by using `csurl` parameter. Obviously, you can add more parameters according to your needs; note that the rest of the parameters will be used in the cross domain request. For instance, if you are using jQuery:
-
-``` JAVASCRIPT
-$('#target').load(
-	'http://www.yourdomain.com/proxy.php', {
-		csurl: 'http://www.cross-domain.com/',
-		param1: value1, 
-		param2: value2
-	}
-);
-```
-
-It’s worth mentioning that all request methods are working GET, PUT, POST, DELETE are working and headers are taken into consideration. That is to say, headers sent from browser to proxy are used in the cross domain request and vice versa.
-
-You can also specify the URL with the `X-Proxy-URL` header, which might be easier to set with your JavaScript library. For example, if you wanted to automatically use the proxy for external URL targets, for GET and POST requests:
-
-``` JAVASCRIPT
-$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-	if (options.url.match(/^https?:/)) {
-		options.headers['X-Proxy-URL'] = options.url;
-		options.url = '/proxy.php';
-	}
-});
-```
-
-Configuration
---------------
-
-For security reasons don't forget to define all the valid requests into top section of `proxy.php` file:
-
-``` JAVASCRIPT
-$valid_requests = array(
-	'http://www.domainA.com/',
-	'http://www.domainB.com/path-to-services/service-a'
-);
-```
-
+*Guide4You* is a web application to display map data from several sources.
+As such, it sometimes runs into difficulties with the same-origin policy (SOP).
+The SOP is an important concept in the web application security model.
  
+SOP stops scripts contained in a web page from accessing data that has a
+different origin where an origin is defined as a combination of URI scheme
+(e.g. *https*), hostname (e.g. *example.com*), and port number (e.g. *80*).
+
+While in most cases this behavior is what you want, it can be a hindrance when
+you need to compile map data from different sources and in principle a web
+server can use response headers to allow scripts from other sites to access
+data that under the SOP would be inaccessible. If however the server for some
+reason does not provide such a header the only feasible way to access the data
+needed is to re-route it through the server that hosts the script. This is what
+an AJAX proxy is good for.
+
+This AJAX proxy in particular is not a standalone application insofar that it
+relies on Guide4You to set its configuration. However you can always use the
+source and modify it to your needs. However, you better simply use the
+original stand alone proxy that *Guide4You AJAX proxy* is based on:
+
+* AJAX Cross Domain (PHP) Proxy by Iacovos Constantinou, available at
+https://github.com/softius/php-cross-domain-proxy

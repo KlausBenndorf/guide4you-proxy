@@ -1,8 +1,11 @@
 <?php
 
 /**
- * AJAX Cross Domain (PHP) Proxy 0.8
+ * Guide4You AJAX proxy 1.0.0
+ * Copyright (C) 2016 Klaus Benndorf, Bonn
+ * based on AJAX Cross Domain (PHP) Proxy 0.8
  * Coypright (C) 2016 Iacovos Constantinou (https://github.com/softius)
+ * modified for use with Guide4You.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,32 +23,33 @@
  * Enables or disables filtering for cross domain requests.
  * Recommended value: true
  */
-define('CSAJAX_FILTERS', true);
+define('CSAJAX_FILTERS', {{{proxyAjaxFilters}}});
 
 /**
  * If set to true, $valid_requests should hold only domains i.e. a.example.com, b.example.com, usethisdomain.com
- * If set to false, $valid_requests should hold the whole URL ( without the parameters ) i.e. http://example.com/this/is/long/url/
+ * If set to false, $valid_requests should hold the whole URL (without the parameters) i.e.
+ * http://example.com/this/is/a/long/url/
  * Recommended value: false (for security reasons - do not forget that anyone can access your proxy)
  */
-define('CSAJAX_FILTER_DOMAIN', false);
+define('CSAJAX_FILTER_DOMAIN', {{{proxyFilterDomain}}});
 
 /**
  * Set debugging to true to receive additional messages - really helpful on development
  */
-define('CSAJAX_DEBUG', false);
+define('CSAJAX_DEBUG', {{{proxyAjaxDebug}}});
 
 /**
- * A set of valid cross domain requests
+ * A set of valid cross domain requests - for convenience localhost is always allowed.
  */
-$valid_requests = array(
-    // 'example.com'
-);
+$valid_requests = array("localhost"{{#proxyValidRequests}}, "{{{.}}}"{{/proxyValidRequests}});
 
 /**
  * Set extra multiple options for cURL
  * Could be used to define CURLOPT_SSL_VERIFYPEER & CURLOPT_SSL_VERIFYHOST for HTTPS
  * Also to overwrite any other options without changing the code
  * See http://php.net/manual/en/function.curl-setopt-array.php
+ *
+ * This currently cannot be configured by means of the Guide4You Configuration file
  */
 $curl_options = array(
     // CURLOPT_SSL_VERIFYPEER => false,
@@ -155,7 +159,7 @@ if ('GET' == $request_method) {
 
 // Get URL from `csurl` in GET or POST data, before falling back to X-Proxy-URL header.
 if (isset($_REQUEST['csurl'])) {
-    $request_url = urldecode($_REQUEST['csurl']);
+    $request_url = $_REQUEST['csurl'];
 } elseif (isset($_SERVER['HTTP_X_PROXY_URL'])) {
     $request_url = urldecode($_SERVER['HTTP_X_PROXY_URL']);
 } else {

@@ -1,0 +1,26 @@
+{
+  "name": "guide4you-proxy",
+  "version": "1.0.0",
+  "description": "An AJAX proxy for Guide4You.",
+  "keywords": [ "proxy", "AJAX", "CORS", "map", "map client", "openlayers" ],
+  "author": "Klaus Benndorf",
+  "homepage": "http://www.benndorf.de",
+  "license": "GPL-3.0+",
+  "contributors": [
+    "Sascha Klemenjak <sascha.klemenjak@benndorf.de>",
+    "Josef Schugt <josef.schugt@benndorf.de>",
+    "Simon Seyock <simonseyock@gmail.com>",
+    "Iacovos Constantinou (softius on gitHub)",
+    "Laurent Cozic <aurent@cozic.net>",
+    "Tai Lee <tai.lee@3030.com.au>",
+    "Andre Parmeggiani (aaparmeggiani on gitHub)",
+    "Eric Skogen (audionerd on gitHub)",
+    "István Szénási <szeist@gmail.com>"
+  ],
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/npm/npm.git"
+  }
+}
+
