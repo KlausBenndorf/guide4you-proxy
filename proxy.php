@@ -278,7 +278,7 @@ foreach ($response_headers as $key => $response_header) {
     // Rewrite the `Location` header, so clients will also use the proxy for redirects.
     if (preg_match('/^Location:/', $response_header)) {
         list($header, $value) = preg_split('/: /', $response_header, 2);
-        $response_header = 'Location: ' . $_SERVER['REQUEST_URI'] . '?csurl=' . $value;
+        $response_header = 'Location: ' . get_current_script_path() . '?csurl=' . $value;
     }
     if (!preg_match('/^(Transfer-Encoding):/', $response_header)) {
         header($response_header, false);
@@ -293,4 +293,32 @@ function csajax_debug_message($message)
     if (true == CSAJAX_DEBUG) {
         print $message . PHP_EOL;
     }
+}
+
+function get_current_script_path() {
+    $url = '';
+
+    if (isset($_SERVER['HTTPS']) && filter_var($_SERVER['HTTPS'], FILTER_VALIDATE_BOOLEAN))
+        $url .= 'https';
+    else
+        $url .= 'http';
+
+    $url .= '://';
+
+    if (isset($_SERVER['HTTP_HOST']))
+        $url .= $_SERVER['HTTP_HOST'];
+    elseif (isset($_SERVER['SERVER_NAME']))
+        $url .= $_SERVER['SERVER_NAME'];
+    else
+        trigger_error ('Could not get URL from $_SERVER vars');
+
+    if ($_SERVER['SERVER_PORT'] != '80')
+      $url .= ':'.$_SERVER["SERVER_PORT"];
+
+    if (isset($_SERVER['SCRIPT_NAME']))
+        $url .= $_SERVER['SCRIPT_NAME'];
+    else
+        trigger_error ('Could not get SCRIPT_NAME from $_SERVER vars');
+
+    return $url;
 }
