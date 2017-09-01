@@ -133,7 +133,9 @@ foreach ($_SERVER as $key => $value) {
     if (strpos($key, 'HTTP_') === 0  ||  strpos($key, 'CONTENT_') === 0) {
         $headername = str_replace('_', ' ', str_replace('HTTP_', '', $key));
         $headername = str_replace(' ', '-', ucwords(strtolower($headername)));
-        if (!in_array($headername, array('Host', 'X-Proxy-Url'))) {
+        if ('X-Proxy-Forward-Authorization' == $headername) {
+            $request_headers[] = "Authorization: $value";
+        } elseif if (!in_array($headername, array('Host', 'X-Proxy-Url'))) {
             $request_headers[] = "$headername: $value";
         }
     }
@@ -279,6 +281,9 @@ foreach ($response_headers as $key => $response_header) {
     if (preg_match('/^Location:/', $response_header)) {
         list($header, $value) = preg_split('/: /', $response_header, 2);
         $response_header = 'Location: ' . preg_replace('/\?csurl=.*/', '?csurl='.urlencode($value), $_SERVER['REQUEST_URI']);
+    }
+    if (preg_match('/401 Authorization Required$/', $response_header)) {
+        $response_content .= "\r\n" . "Please use the 'X-Proxy-Forward-Authorization' header to provide authorization for the resource.";
     }
     if (!preg_match('/^(Transfer-Encoding):/', $response_header)) {
         header($response_header, false);
