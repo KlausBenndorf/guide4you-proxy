@@ -135,7 +135,7 @@ foreach ($_SERVER as $key => $value) {
         $headername = str_replace(' ', '-', ucwords(strtolower($headername)));
         if ('X-Proxy-Forward-Authorization' == $headername) {
             $request_headers[] = "Authorization: $value";
-        } elseif if (!in_array($headername, array('Host', 'X-Proxy-Url'))) {
+        } elseif (!in_array($headername, array('Host', 'X-Proxy-Url'))) {
             $request_headers[] = "$headername: $value";
         }
     }
